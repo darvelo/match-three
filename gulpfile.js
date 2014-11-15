@@ -1,4 +1,3 @@
-var fs = require('fs');
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
@@ -13,8 +12,6 @@ var destStylesDir = dest + '/styles';
 
 var sassDir = 'sass';
 var sassGlob = sassDir + '/**/*.scss';
-var sassUrl = '/' + sassDir;
-var sassUrlRegex = new RegExp('^\\' + sassUrl);
 
 gulp.task('sass', function() {
     var processors = [
@@ -23,15 +20,15 @@ gulp.task('sass', function() {
 
     return gulp.src(sassGlob)
         .pipe(sourcemaps.init())
-        // sass processing
+        // css preprocessing
         .pipe(sass({ onError: function (err) { console.log(err); } }))
             // workaround to keep sourcemaps working
             // https://github.com/dlmanning/gulp-sass/issues/106#issuecomment-60977513
-            .pipe(sourcemaps.write({ includeContent: false, sourceRoot: sassUrl }))
+            .pipe(sourcemaps.write())
             .pipe(sourcemaps.init({ loadMaps: true }))
-        // css post-processing
+        // css postprocessing
         .pipe(postcss(processors))
-        .pipe(sourcemaps.write('.', { includeContent: false }))
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest(destStylesDir))
         // filter css for livereload
         .pipe(filter('**/*.css'))
@@ -44,28 +41,6 @@ gulp.task('browser-sync', function() {
         minify: false,
         server: {
             baseDir: dest,
-            middleware: function (req, res, next) {
-                var filePath,
-                    len,
-                    readStream;
-
-                // serve sass files directly (sass dir is outside of server baseDir)
-                if (sassUrlRegex.test(req.url)) {
-                    filePath = req.url.slice(1);
-                    len = fs.statSync(filePath).size;
-
-                    res.writeHead(200, {
-                        'Content-Type': 'text/css',
-                        'Content-Length': len
-                    });
-
-                    readStream = fs.createReadStream(filePath);
-                    return readStream.pipe(res);
-                }
-
-                // file requested was not sass
-                next();
-            }
         },
     });
 });
