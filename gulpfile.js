@@ -1,6 +1,9 @@
 var fs = require('fs');
 var gulp = require('gulp');
-var sass = require('gulp-ruby-sass');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
+var postcss = require('gulp-postcss');
+var autoprefixer = require('autoprefixer-core');
 var filter = require('gulp-filter');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
@@ -14,9 +17,21 @@ var sassUrl = '/' + sassDir;
 var sassUrlRegex = new RegExp('^\\' + sassUrl);
 
 gulp.task('sass', function() {
+    var processors = [
+        autoprefixer({ browsers: ['last 2 versions'] })
+    ];
+
     return gulp.src(sassGlob)
-        .pipe(sass({ sourcemap: true, sourcemapPath: sassUrl}))
-        .on('error', function (err) { console.log(err); })
+        .pipe(sourcemaps.init())
+        // sass processing
+        .pipe(sass({ onError: function (err) { console.log(err); } }))
+            // workaround to keep sourcemaps working
+            // https://github.com/dlmanning/gulp-sass/issues/106#issuecomment-60977513
+            .pipe(sourcemaps.write({ includeContent: false, sourceRoot: sassUrl }))
+            .pipe(sourcemaps.init({ loadMaps: true }))
+        // css post-processing
+        .pipe(postcss(processors))
+        .pipe(sourcemaps.write('.', { includeContent: false }))
         .pipe(gulp.dest(destStylesDir))
         // filter css for livereload
         .pipe(filter('**/*.css'))

@@ -17,9 +17,12 @@
   },
   "homepage": "https://github.com/darvelo/match-three",
   "devDependencies": {
+    "autoprefixer-core": "^4.0.0",
     "browser-sync": "^1.6.5",
     "gulp": "^3.8.10",
     "gulp-filter": "^1.0.2",
-    "gulp-ruby-sass": "^0.7.1"
+    "gulp-postcss": "^3.0.0",
+    "gulp-sass": "^1.1.0",
+    "gulp-sourcemaps": "^1.2.8"
   }
 }
