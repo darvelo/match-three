@@ -1,0 +1,30 @@
+node_modules
+dist
+.tmp
+.sass-cache
+coverage
+bower_components
+*.sublime-project
+*.sublime-workspace
+*.secret.json
+*.swp
+
+# built files
+public/styles
+public/scripts
+
+# vim-related
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+.vimrc
+*~
+
+# TernJS
+.tern-project
+
+# Sqlite3 DB file
+*.db
+*.db-journal
