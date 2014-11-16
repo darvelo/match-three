@@ -1,0 +1,21 @@
+{
+  "name": "match-three",
+  "version": "1.0.0",
+  "homepage": "https://github.com/darvelo/match-three",
+  "description": "A simple match-three game in HTML5.",
+  "authors": [
+    "David Arvelo"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "loader.js": "~2.1.1"
+  }
+}
