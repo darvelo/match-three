@@ -24,7 +24,7 @@ var destScriptsDir = dest + '/scripts';
 // js vars
 var jsDir = 'js';
 var jsGlob = jsDir + '/**/*.js';
-var jsLibsGlobFile = 'libs.js';
+var jsLibsFile = 'libs.js';
 var jsAppFile = 'app.js';
 var jsLibsGlob = [
     'bower_components/loader.js/loader.js'
@@ -39,7 +39,7 @@ gulp.task('js:clean', function(cb) {
 });
 
 gulp.task('js:clean:libs', function(cb) {
-    del(destScriptsDir + '/' + jsLibsGlobFile, cb);
+    del(destScriptsDir + '/' + jsLibsFile, cb);
 });
 
 gulp.task('js:clean:app', function(cb) {
@@ -49,7 +49,7 @@ gulp.task('js:clean:app', function(cb) {
 // vendor libraries
 gulp.task('js:libs', ['js:clean:libs'], function() {
     return gulp.src(jsLibsGlob)
-        .pipe(concat(jsLibsGlobFile))
+        .pipe(concat(jsLibsFile))
         .pipe(gulp.dest(destScriptsDir));
 });
 
