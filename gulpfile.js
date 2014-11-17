@@ -58,7 +58,7 @@ gulp.task('js:app', ['js:clean:app'], function() {
     return gulp.src(jsGlob)
         .pipe(sourcemaps.init())
         .pipe(to5({ modules: 'amd', sourceRoot: __dirname + '/js', moduleRoot: '' }))
-        .on('error', function (err) { console.log(err.toString()); this.emit('end'); })
+        .on('error', function (err) { console.error(err.toString()); this.emit('end'); })
         .pipe(concat(jsAppFile))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(destScriptsDir));
@@ -76,7 +76,8 @@ gulp.task('sass', ['css:clean'], function() {
     return gulp.src(sassGlob)
         .pipe(sourcemaps.init())
         // css preprocessing
-        .pipe(sass({ onError: function (err) { console.log(err); } }))
+        .pipe(sass())
+        .on('error', function (err) { console.error(err.toString()); this.emit('end'); })
             // workaround to keep sourcemaps working
             // https://github.com/dlmanning/gulp-sass/issues/106#issuecomment-60977513
             .pipe(sourcemaps.write())
