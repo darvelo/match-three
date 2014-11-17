@@ -58,6 +58,7 @@ gulp.task('js:app', ['js:clean:app'], function() {
     return gulp.src(jsGlob)
         .pipe(sourcemaps.init())
         .pipe(to5({ modules: 'amd', sourceRoot: __dirname + '/js', moduleRoot: '' }))
+        .on('error', function (err) { console.log(err.toString()); this.emit('end'); })
         .pipe(concat(jsAppFile))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(destScriptsDir));
