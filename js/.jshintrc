@@ -26,6 +26,7 @@
         "Em": true,
         "DS": true,
         "$": true,
+        "require": true,
         "moment": true,
         "validator": true,
         "_": true,
