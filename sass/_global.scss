@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8em;
+    height: 12em;
+    background-color: rgb(60,60,40);
+    background-size: 10px 10px;
+    background-image:
+        linear-gradient(45deg, transparent 0%, rgb(20,20,20) 25%, transparent 50%, rgb(20,20,20) 75%, transparent 100%),
+        linear-gradient(-45deg, transparent 0%, rgb(20,20,20) 25%, transparent 50%, rgb(20,20,20) 75%, transparent 100%);
+    font-family: Geo;
+    font-size: 40px; // 40 * 8em = 320px
+    color: rgb(200,200,100);
+}
+
+#game .screen {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+
+    &.active {
+        display: block;
+    }
+}
+
+.logo {
+    margin: 0;
+    font-family: Slackey;
+    font-size: 1.5em;
+    line-height: 0.9em;
+    text-align: center;
+    color: rgb(70,120,20);
+    text-shadow: 0.03em  0.03em  0.03em  rgb(255,255,0),
+                -0.03em -0.03em  0.03em  rgb(255,255,0),
+                 0.10em  0.15em  0.15em  rgb(0,0,0);
+}
