@@ -1,6 +1,6 @@
 export var $ = document.getElementById.bind(document);
 export var $$ = document.querySelectorAll.bind(document);
-export function bind(element, event, handler) {
+export function bind (element, event, handler) {
     var elStr = element;
 
     if (typeof element === 'string') {
