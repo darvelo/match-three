@@ -2,6 +2,7 @@ import game from 'game';
 
 var App = {
     start: function () {
+        game.setup();
         game.showScreen('splash-screen');
         console.log('App started!');
     },

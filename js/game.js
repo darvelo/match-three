@@ -1,4 +1,4 @@
-import { $, $$ } from 'util/dom';
+import { $, $$, bind } from 'util/dom';
 import splashScreen from 'screens/splash';
 import mainMenu from 'screens/main-menu';
 
@@ -17,4 +17,16 @@ export function showScreen (id) {
 
     screens[id].run();
     screen.classList.add('active');
+}
+
+export function setup () {
+    bind(document, 'touchmove', function (e) {
+        e.preventDefault();
+    });
+
+    // hide the address bar on Android devices
+    if (/Android/.test(navigator.userAgent)) {
+        $$('html')[0].style.height = '200%';
+        setTimeout(function () { window.scrollTo(0,1); }, 0);
+    }
 }
