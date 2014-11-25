@@ -90,7 +90,7 @@ export function canSwap (x1, y1, x2, y2) {
     jewels[x1][y1] = type2;
     jewels[x2][y2] = type1;
 
-    chain = checkChain(x1, x2) > 2 || checkChain(x2, y2) > 2;
+    chain = checkChain(x2, y2) > 2 || checkChain(x1, y1) > 2;
 
     // swap back
     jewels[x1][y1] = type1;
