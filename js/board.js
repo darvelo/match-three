@@ -19,28 +19,6 @@ function getJewel (x, y) {
     return jewels[x][y];
 }
 
-function fillBoard () {
-    var type;
-    jewels = [];
-
-    for (var x = 0; x < cols; ++x) {
-        jewels[x] = [];
-
-        for (var y = 0; y < rows; ++y) {
-            type = randomJewel();
-            // disallow chains to form while setting up the board
-            while ((type === getJewel(x-1, y) &&
-                    type === getJewel(x-2, y)) ||
-                    type === getJewel(x, y-1) &&
-                    type === getJewel(x, y-2)) {
-                type = randomJewel();
-            }
-
-            jewels[x][y] = type;
-        }
-    }
-}
-
 // returns the number of jewels in the longest chain that includes (x, y)
 function checkChain (x, y) {
     var type = getJewel(x, y);
@@ -99,6 +77,57 @@ export function canSwap (x1, y1, x2, y2) {
     return chain;
 }
 
+// returns true if (x, y) is a valid position and if
+// the jewel at (x, y) can be swapped with a neighbor
+function canJewelMove (x, y) {
+    return (
+            (x > 0 && canSwap(x, y, x-1, y)) ||
+            (x < cols-1 && canSwap(x, y, x+1, y)) ||
+
+            (y > 0 && canSwap(x, y, x, y-1)) ||
+            (y < rows-1 && canSwap(x, y, x, y+1))
+           );
+}
+
+// returns true if at least one match can be made
+function hasMoves () {
+    for (var x = 0; x < cols; ++x) {
+        for (var y = 0; y < rows; ++y) {
+            if (canJewelMove(x, y)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function fillBoard () {
+    var type;
+    jewels = [];
+
+    for (var x = 0; x < cols; ++x) {
+        jewels[x] = [];
+
+        for (var y = 0; y < rows; ++y) {
+            type = randomJewel();
+            // disallow chains to form while setting up the board
+            while ((type === getJewel(x-1, y) &&
+                    type === getJewel(x-2, y)) ||
+                    type === getJewel(x, y-1) &&
+                    type === getJewel(x, y-2)) {
+                type = randomJewel();
+            }
+
+            jewels[x][y] = type;
+        }
+    }
+
+    if (!hasMoves) {
+        fillBoard();
+    }
+}
+
 // returns a two-dimensional map of chain lengths
 function getChains () {
     var chains = [];
@@ -112,6 +141,18 @@ function getChains () {
     }
 
     return chains;
+}
+
+// create a copy of the jewel board
+export function getBoard () {
+    var copy = [];
+    var x;
+
+    for (x = 0; x < cols; ++x) {
+        copy[x] = jewels[x].slice();
+    }
+
+    return copy;
 }
 
 function check (events) {
@@ -185,10 +226,43 @@ function check (events) {
             data: moved,
         });
 
+        if (!hasMoves) {
+            fillBoard();
+
+            events.push({
+                type: 'refill',
+                data: getBoard(),
+            });
+        }
+
         return check(events);
     } else {
         return events;
     }
+}
+
+// if possible, swaps (x1, y2) and (x2, y2) and
+// calls the callback function with a list of board events
+export function swap (x1, y1, x2, y2, callback) {
+    var tmp, events;
+
+    if (canSwap(x1, y1, x2, y2)) {
+        // swap the jewels
+        tmp = getJewel(x1, y1);
+        jewels[x1][y1] = getJewel(x2, y2);
+        jewels[x2][y2] = tmp;
+
+        // check the board and get a list of events
+        events = check();
+
+        if (type(callback, 'Function')) {
+            callback(events);
+        }
+
+        return;
+    }
+
+    callback(false);
 }
 
 export function print () {
