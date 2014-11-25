@@ -76,6 +76,7 @@ function isAdjacent (x1, y1, x2, y2) {
     return (dx + dy === 1);
 }
 
+// returns true if (x1, y1) can be swapped with (x2, y2) to form a new match
 export function canSwap (x1, y1, x2, y2) {
     var type1 = getJewel(x1, y1);
     var type2 = getJewel(x2, y2);
@@ -96,6 +97,98 @@ export function canSwap (x1, y1, x2, y2) {
     jewels[x2][y2] = type2;
 
     return chain;
+}
+
+// returns a two-dimensional map of chain lengths
+function getChains () {
+    var chains = [];
+
+    for (var x = 0; x < cols; ++x) {
+        chains[x] = [];
+
+        for (var y = 0; y < rows; ++y) {
+            chains[x][y] = checkChain(x, y);
+        }
+    }
+
+    return chains;
+}
+
+function check (events) {
+    var chains = getChains();
+    var hadChains = false;
+    var removed = [], moved = [], gaps = [];
+    var x, y;
+
+    // points awarded for this swap
+    var score = 0;
+
+    // remove chains and move existing jewels down (let them fall)
+    for (x = 0; x < cols; ++x) {
+        gaps[x] = 0;
+
+        for (y = rows - 1; y >= 0; --y) {
+            if (chains[x][y] > 2) {
+                hadChains = true;
+                gaps[x]++;
+
+                removed.push({
+                    x: x,
+                    y: y,
+                    type: getJewel(x, y),
+                });
+
+                // add points to score
+                // double the multiplier for every extra jewel in the chain
+                score += baseScore * Math.pow(2, (chains[x][y] - 3));
+            } else if (gaps[x]) {
+                moved.push({
+                    fromX: x,
+                    fromY: y,
+                    toX: x,
+                    toY: y + gaps[x],
+                    type: getJewel(x, y),
+                });
+
+                jewels[x][y + gaps[x]] = getJewel(x, y);
+            }
+        }
+    }
+
+    // create new jewels to drop down from out of view
+    for (x = 0; x < cols; ++x) {
+        for (y = gaps[x] - 1; y >= 0; --y) {
+            jewels[x][y] = randomJewel();
+
+            moved.push({
+                fromX: x,
+                fromY: y - gaps[x],
+                toX: x,
+                toY: y,
+                type: jewels[x][y],
+            });
+        }
+    }
+
+    events = events || [];
+
+    // recursively check for chains created by new jewels
+    if (hadChains) {
+        events.push({
+            type: 'remove',
+            data: removed,
+        }, {
+            type: 'score',
+            data: score,
+        }, {
+            type: 'move',
+            data: moved,
+        });
+
+        return check(events);
+    } else {
+        return events;
+    }
 }
 
 export function print () {
