@@ -1,4 +1,5 @@
 import settings from 'settings';
+import type from 'util/type';
 
 var jewels;
 var cols;
@@ -30,10 +31,10 @@ function getJewel (x, y) {
 }
 
 export function print () {
-    var str = '';
+    var str = '\n';
     for (var y = 0; y < rows; ++y) {
         for (var x = 0; x < cols; ++x) {
-            str += getJewel(x, y);
+            str += getJewel(x, y) + ' ';
         }
 
         str += '\n';
@@ -43,10 +44,13 @@ export function print () {
 }
 
 export function initialize (callback) {
-     cols = settings.cols;
-     rows = settings.rows;
-     baseScore = settings.baseScore;
-     numJewelTypes = settings.numJewelTypes;
-     fillBoard();
-     callback();
+    cols = settings.cols;
+    rows = settings.rows;
+    baseScore = settings.baseScore;
+    numJewelTypes = settings.numJewelTypes;
+    fillBoard();
+
+    if (type(callback, 'Function')) {
+        callback();
+    }
 }
