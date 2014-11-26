@@ -11,7 +11,8 @@ bower_components
 
 # built files
 public/styles
-public/scripts
+public/scripts/*
+!public/scripts/workers
 
 # vim-related
 [._]*.s[a-w][a-z]
