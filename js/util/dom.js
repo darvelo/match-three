@@ -1,5 +1,15 @@
-export var $ = document.getElementById.bind(document);
-export var $$ = document.querySelectorAll.bind(document);
+export var $ = function (id) {
+    if (id[0] === '#') {
+        id = id.slice(1);
+    }
+
+    return document.getElementById(id);
+};
+
+export var $$ = function (selector, ctx) {
+    return (ctx || document).querySelectorAll(selector);
+};
+
 export function bind (element, event, handler) {
     var elStr = element;
 
