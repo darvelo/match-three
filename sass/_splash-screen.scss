@@ -1,10 +1,44 @@
+@mixin preloader-progress-bar {
+    background-image:
+    linear-gradient(-45deg,
+                    transparent 33%, rgba(0,0,0,.1) 33%,
+                    rgba(0,0,0,.1) 66%, transparent 66%),
+    linear-gradient(180deg,
+                    rgba(255,255,255,.25) 0%,
+                    rgba(0,0,0,.25) 100%),
+    linear-gradient(90deg,
+                    rgb(40,160,20),
+                    rgb(70,120,20));
+    background-size: 55px 100%, 100% 100%, 100% 100%;
+}
+
 #splash-screen {
     text-align: center;
 
     h1 { padding-top: 2.5em; }
 
     .continue {
+        display: none;
         cursor: pointer;
         font-size: 0.75em;
+    }
+
+    .loader {
+        display: block;
+        margin: 0 auto;
+        width: 6em;
+        height: 0.5em;
+        border-radius: 0.5em;
+        overflow: hidden;
+        border: 1px solid rgb(200,200,100);
+    }
+
+    .loader::-moz-progress-bar {
+        @include preloader-progress-bar;
+    }
+
+    .loader::-webkit-progress-bar-value,
+    .loader::-webkit-progress-value {
+        @include preloader-progress-bar;
     }
 }
