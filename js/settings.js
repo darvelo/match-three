@@ -6,5 +6,7 @@ export default {
     baseScore: 100,
     numJewelTypes: 7,
     // element changes size based on screen size
-    jewelSize: $('jewel-proto').getBoundingClientRect().width
+    jewelSize: $('jewel-proto').getBoundingClientRect().width,
+    // where to store images loaded through JS
+    images: {},
 };
