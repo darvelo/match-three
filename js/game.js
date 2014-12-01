@@ -8,14 +8,15 @@ var screens = {
 };
 
 export function showScreen (id) {
-    var activeScreen = $$('#game .screen.active')[0],
-        screen = $(id);
+    var activeScreen = $$('#game .screen.active')[0];
+    var screen = $(id);
+    var args = [].slice.call(arguments, 1);
 
     if (activeScreen) {
         activeScreen.classList.remove('active');
     }
 
-    screens[id].run();
+    screens[id].run.apply(screens[id], args);
     screen.classList.add('active');
 }
 
