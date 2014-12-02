@@ -1,11 +1,13 @@
 import { $, $$, bind } from 'util/dom';
 import splashScreen from 'screens/splash';
+import gameScreen from 'screens/game';
 import mainMenu from 'screens/main-menu';
 import settings from 'settings';
 import preload from 'util/loader';
 
 var screens = {
     'splash-screen': splashScreen,
+    'game-screen': gameScreen,
     'main-menu': mainMenu,
 };
 

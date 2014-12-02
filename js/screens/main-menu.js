@@ -6,11 +6,11 @@ var game;
 
 function setup () {
     bind('#main-menu ul.menu', 'click', function (e) {
-        var action;
+        var screenName;
 
         if (e.target.nodeName.toLowerCase() === 'button') {
-            action = e.target.getAttribute('data-name');
-            game.showScreen(action);
+            screenName = e.target.getAttribute('data-name');
+            game.showScreen(screenName);
         }
     });
 }
