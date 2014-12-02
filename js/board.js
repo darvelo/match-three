@@ -11,7 +11,7 @@ function post (command, data, callback) {
     worker.postMessage({
         id: messageCount,
         command: command,
-        data: data,
+        data: JSON.parse(JSON.stringify(data)),
     });
 
     messageCount++;
