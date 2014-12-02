@@ -57,6 +57,9 @@ export function initialize (callback) {
     callbacks = [];
     worker = new Worker('/scripts/workers/board.js');
     bind(worker, 'message', messageHandler);
+    bind(worker, 'error', function (err) {
+        console.log('worker error:', err);
+    });
     post('initialize', settings, callback);
 }
 
