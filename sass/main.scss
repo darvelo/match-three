@@ -1,5 +1,11 @@
+// general
 @import 'fontfaces';
 @import 'global';
+
+// screens
 @import 'splash-screen';
+@import 'game-screen';
 @import 'main-menu';
+
+// mobile styles
 @import 'mobile';
