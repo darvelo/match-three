@@ -1,10 +1,20 @@
 import board from 'board';
 import display from 'display';
 
-export function run () {
-    board.initialize(function () {
-        display.initialize(function () {
-            // start the game
-        });
+function redrawDisplay (jewels) {
+    display.redraw(jewels, function () {
+        // do nothing for now
     });
+}
+
+function getBoard () {
+    board.getBoard(redrawDisplay);
+}
+
+function initializeDisplay () {
+    display.initialize(getBoard);
+}
+
+export function run () {
+    board.initialize(initializeDisplay);
 }
