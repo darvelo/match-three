@@ -4,6 +4,7 @@ import gameScreen from 'screens/game';
 import mainMenu from 'screens/main-menu';
 import settings from 'settings';
 import preload from 'util/loader';
+import loadedImages from 'images';
 
 var screens = {
     'splash-screen': splashScreen,
@@ -25,7 +26,7 @@ export function showScreen (id) {
 }
 
 function loadImages () {
-    preload('images/jewels' + settings.jewelSize + '.png', settings.images);
+    preload('images/jewels' + settings.jewelSize + '.png', loadedImages);
 }
 
 export function setup () {
