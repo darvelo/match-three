@@ -1,11 +1,11 @@
 import board from 'board';
 import game from 'game';
-import type from 'util/type';
+import is from 'util/is';
 
 var App = {
     board: board,
     game: game,
-    type: type,
+    is: is,
     start: function () {
         game.setup();
         game.showScreen('splash-screen');
