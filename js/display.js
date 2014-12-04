@@ -1,5 +1,7 @@
 import { $$ } from 'util/dom';
 import settings from 'settings';
+import preload from 'util/loader';
+import loadedImages from 'images';
 
 var canvas = document.createElement('canvas');
 export var ctx = canvas.getContext('2d');
@@ -33,8 +35,17 @@ function createBackground () {
     return bg;
 }
 
+function loadSprites () {
+    preload('images/jewels' + settings.jewelSize + '.png', loadedImages);
+}
+
 function setup () {
     var boardElement = $$('#game-screen .game-board')[0];
+
+    // size changes based on screen size
+    settings.jewelSize = boardElement.getBoundingClientRect().width / settings.cols;
+
+    loadSprites();
 
     canvas.classList.add('board');
     canvas.width = cols * jewelSize;

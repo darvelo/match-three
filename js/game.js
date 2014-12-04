@@ -2,9 +2,6 @@ import { $, $$, bind } from 'util/dom';
 import splashScreen from 'screens/splash';
 import gameScreen from 'screens/game';
 import mainMenu from 'screens/main-menu';
-import settings from 'settings';
-import preload from 'util/loader';
-import loadedImages from 'images';
 
 var screens = {
     'splash-screen': splashScreen,
@@ -25,16 +22,10 @@ export function showScreen (id) {
     screen.classList.add('active');
 }
 
-function loadImages () {
-    preload('images/jewels' + settings.jewelSize + '.png', loadedImages);
-}
-
 export function setup () {
     bind(document, 'touchmove', function (e) {
         e.preventDefault();
     });
-
-    loadImages();
 
     // hide the address bar on Android devices
     if (/Android/.test(navigator.userAgent)) {
