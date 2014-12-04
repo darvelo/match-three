@@ -1,6 +1,6 @@
 import { $$ } from 'util/dom';
 import settings from 'settings';
-import preload from 'util/loader';
+import preloader from 'util/loader';
 import loadedImages from 'images';
 
 var boardElement;
@@ -12,6 +12,11 @@ var rows = settings.rows;
 var cols = settings.cols;
 // size changes based on screen size
 var jewelSize;
+// holds filename to get access to jewels sprite image from the loadedImages object
+var jewelSpritesFilename;
+// holds a copy of the board received from the board module
+var jewels;
+// flag to only run setup once
 var firstRun = true;
 
 function createBackground () {
@@ -39,18 +44,40 @@ function createBackground () {
     return bg;
 }
 
-function loadSprites () {
-    preload('images/jewels' + settings.jewelSize + '.png', loadedImages);
+function drawJewel (type, x, y) {
+    var image = loadedImages[jewelSpritesFilename];
+
+    ctx.drawImage(image,
+                  type * jewelSize, 0, jewelSize, jewelSize,
+                  x * jewelSize, y * jewelSize, jewelSize, jewelSize
+                 );
+}
+
+export function redraw (newJewels, callback) {
+    var x, y;
+    jewels = newJewels;
+
+    preloader.one(jewelSpritesFilename, function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (x = 0; x < cols; ++x) {
+            for (y = 0; y < rows; ++y) {
+                drawJewel(jewels[x][y], x, y);
+            }
+        }
+
+        callback();
+    });
 }
 
 function setup () {
     boardElement = $$('#game-screen .game-board')[0];
     boardDimensions = boardElement.getBoundingClientRect();
 
-    // size changes based on screen size
+    // jewel size changes based on screen size
     jewelSize = settings.jewelSize = boardDimensions.width / settings.cols;
-
-    loadSprites();
+    jewelSpritesFilename = 'images/jewels' + jewelSize + '.png';
+    preloader.load(jewelSpritesFilename, loadedImages);
 
     canvas.classList.add('board');
     canvas.width = boardDimensions.width;
