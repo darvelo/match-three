@@ -6,12 +6,12 @@
 /* use a smaller base size for small screens */
 @media (max-device-width: 480px) and (orientation: portrait),
 (max-device-width: 640px) and (orientation: landscape) {
-    #game { font-size : 32px; }
+    #game { font-size : 40px; }
 }
 /* use a bigger base size for ipad and tablets */
 @media (min-device-width: 768px) and (orientation: portrait),
 (min-device-width: 1024px) and (orientation: landscape) {
-    #game { font-size : 64px; }
+    #game { font-size : 80px; }
 }
 
 /* smartphones landscape */

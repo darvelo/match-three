@@ -2,4 +2,15 @@
     position: relative;
     width: 8em;
     height: 8em;
+    margin: 0 auto;
+
+    .board-bg,
+    .board {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .board-bg { z-index: 0; }
+    .board { z-index: 10; }
 }

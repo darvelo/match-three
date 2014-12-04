@@ -3,11 +3,15 @@ import settings from 'settings';
 import preload from 'util/loader';
 import loadedImages from 'images';
 
+var boardElement;
+var boardDimensions;
+
 var canvas = document.createElement('canvas');
 export var ctx = canvas.getContext('2d');
 var rows = settings.rows;
 var cols = settings.cols;
-var jewelSize = settings.jewelSize;
+// size changes based on screen size
+var jewelSize;
 var firstRun = true;
 
 function createBackground () {
@@ -16,8 +20,8 @@ function createBackground () {
     var x, y;
 
     bg.classList.add('board-bg');
-    bg.width = cols * jewelSize;
-    bg.height = rows * jewelSize;
+    bg.width = boardDimensions.width;
+    bg.height = boardDimensions.height;
 
     ctx.fillStyle = 'rgba(255,235,255,0.15)';
 
@@ -40,16 +44,17 @@ function loadSprites () {
 }
 
 function setup () {
-    var boardElement = $$('#game-screen .game-board')[0];
+    boardElement = $$('#game-screen .game-board')[0];
+    boardDimensions = boardElement.getBoundingClientRect();
 
     // size changes based on screen size
-    settings.jewelSize = boardElement.getBoundingClientRect().width / settings.cols;
+    jewelSize = settings.jewelSize = boardDimensions.width / settings.cols;
 
     loadSprites();
 
     canvas.classList.add('board');
-    canvas.width = cols * jewelSize;
-    canvas.height = rows * jewelSize;
+    canvas.width = boardDimensions.width;
+    canvas.height = boardDimensions.height;
 
     boardElement.appendChild(createBackground());
     boardElement.appendChild(canvas);
