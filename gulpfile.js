@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var del = require('del');
+var fs = require('fs');
 
 // js
 var to5 = require('gulp-6to5');
@@ -62,6 +63,7 @@ gulp.task('js:app', ['js:clean:app'], function() {
             amdModuleIds: true,
             sourceRoot: __dirname + '/js',
             moduleRoot: '',
+            experimental: true,
         }))
         .on('error', function (err) { console.error(err.toString()); this.emit('end'); })
         .pipe(concat(jsAppFile))
@@ -102,6 +104,36 @@ gulp.task('browser-sync', function() {
         minify: false,
         server: {
             baseDir: dest,
+            middleware: function (req, res, next) {
+                var len;
+                var readStream;
+
+                if (/6to5-polyfill.js$/.test(req.url)) {
+                    var browser6to5Polyfill = './node_modules/gulp-6to5/node_modules/6to5/browser-polyfill.js';
+                    len = fs.statSync(browser6to5Polyfill).size;
+                    res.writeHead(200, {
+                        'Content-Type': 'text/javascript',
+                        'Content-Length': len,
+                    });
+
+                    readStream = fs.createReadStream(browser6to5Polyfill);
+                    return readStream.pipe(res);
+                }
+
+                if (/regenerator-runtime.js$/.test(req.url)) {
+                    var regeneratorRuntime = 'vendorjs/regenerator-runtime.js';
+                    len = fs.statSync(regeneratorRuntime).size;
+                    res.writeHead(200, {
+                        'Content-Type': 'text/javascript',
+                        'Content-Length': len,
+                    });
+
+                    readStream = fs.createReadStream(regeneratorRuntime);
+                    return readStream.pipe(res);
+                }
+
+                next();
+            }
         },
     });
 });
