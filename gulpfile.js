@@ -108,7 +108,7 @@ gulp.task('browser-sync', function() {
                 var len;
                 var readStream;
 
-                if (/6to5-polyfill.js$/.test(req.url)) {
+                if (/polyfill-6to5.js$/.test(req.url)) {
                     var browser6to5Polyfill = './node_modules/gulp-6to5/node_modules/6to5/browser-polyfill.js';
                     len = fs.statSync(browser6to5Polyfill).size;
                     res.writeHead(200, {
