@@ -3,6 +3,33 @@ import display from 'display';
 
 var cursor = {};
 
+function playBoardEvents (events) {
+    if (events.length === 0) {
+        redrawBoard();
+        return;
+    }
+
+    var boardEvent = events.shift();
+    var next = function () {
+        playBoardEvents(events);
+    };
+
+    switch (boardEvent.type) {
+    case 'move':
+        display.moveJewels(boardEvent.data, next);
+        break;
+    case 'remove':
+        display.removeJewels(boardEvent.data, next);
+        break;
+    case 'refill':
+        display.refill(boardEvent.data, next);
+        break;
+    default:
+        next();
+        break;
+    }
+}
+
 function setCursor (x = 0, y = 0, selected = false) {
     cursor = { x, y, selected };
 }
@@ -40,14 +67,14 @@ function redrawDisplay (jewels) {
     });
 }
 
-function getBoard () {
+function redrawBoard () {
     board.getBoard(redrawDisplay);
 }
 
 function initializeDisplay () {
     display.initialize(function () {
         setCursor(0, 0, false);
-        getBoard();
+        redrawBoard();
     });
 }
 
