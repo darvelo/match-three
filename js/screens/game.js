@@ -82,6 +82,22 @@ function moveCursor (x, y) {
     }
 }
 
+function moveUp () {
+    moveCursor(0, -1);
+}
+
+function moveDown () {
+    moveCursor(0, 1);
+}
+
+function moveLeft () {
+    moveCursor(-1, 0);
+}
+
+function moveRight () {
+    moveCursor(1, 0);
+}
+
 function redrawDisplay (jewels) {
     display.redraw(jewels, function () {
         // do nothing for now
