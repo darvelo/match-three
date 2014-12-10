@@ -12,12 +12,25 @@ var keys = {
     32: 'KEY_SPACE',
 };
 
-function bindAction (action, handler) {
-    // bind a handler function to a game action
+// bind a handler function to a game action
+export function bindAction (action, handler) {
+    if (!inputHandlers[action]) {
+        inputHandlers[action] = [];
+    }
+
+    inputHandlers[action].push(handler);
 }
 
-function trigger (action) {
-    // trigger a game action
+// trigger a game action
+function trigger (action, ...args) {
+    var handlers = inputHandlers[action] || [];
+    var i;
+
+    for (i = 0; i < handlers.length; ++i) {
+        // catch errors to keep the process going
+        try { handlers[i](...args); }
+        catch (e) {}
+    }
 }
 
 function handleClick (e, control, click) {

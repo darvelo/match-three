@@ -1,8 +1,16 @@
 import board from 'board';
 import display from 'display';
 import settings from 'settings';
+import input from 'input';
 
+var firstRun = true;
 var cursor = {};
+
+function redrawDisplay (jewels) {
+    display.redraw(jewels, function () {
+        // do nothing for now
+    });
+}
 
 function redrawBoard () {
     board.getBoard(redrawDisplay);
@@ -98,12 +106,6 @@ function moveRight () {
     moveCursor(1, 0);
 }
 
-function redrawDisplay (jewels) {
-    display.redraw(jewels, function () {
-        // do nothing for now
-    });
-}
-
 function initializeDisplay () {
     display.initialize(function () {
         setCursor(0, 0, false);
@@ -111,6 +113,20 @@ function initializeDisplay () {
     });
 }
 
+function setupInputs () {
+    input.initialize();
+    input.bindAction('selectJewel', selectJewel);
+    input.bindAction('moveUp', moveUp);
+    input.bindAction('moveDown', moveDown);
+    input.bindAction('moveLeft', moveLeft);
+    input.bindAction('moveRight', moveRight);
+}
+
 export function run () {
+    if (firstRun) {
+        setupInputs();
+        firstRun = false;
+    }
+
     board.initialize(initializeDisplay);
 }
