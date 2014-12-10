@@ -3,16 +3,11 @@ import display from 'display';
 
 var cursor = {};
 
-function setCursor (x, y, selected) {
+function setCursor (x = 0, y = 0, selected = false) {
     cursor = { x, y, selected };
 }
 
-function selectJewel (x, y) {
-    if (arguments.length === 0) {
-        selectJewel(cursor.x, cursor.y);
-        return;
-    }
-
+function selectJewel (x = cursor.x, y = cursor.y) {
     if (!cursor.selected) {
         setCursor(x, y, true);
         return;
@@ -24,13 +19,17 @@ function selectJewel (x, y) {
 
     switch (dist) {
     case 0:
+        // deselect the selected jewel
         setCursor(x, y, false);
         break;
     case 1:
-        // swap jewels
+        // selected an adjacent jewel: swap them
+        board.swap(cursor.x, cursor.y, x, y, playBoardEvents);
+        setCursor(x, y, false);
         break;
     default:
-        setCursor(x, y);
+        // selected a different jewel
+        setCursor(x, y, true);
         break;
     }
 }
