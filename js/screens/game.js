@@ -1,7 +1,12 @@
 import board from 'board';
 import display from 'display';
+import settings from 'settings';
 
 var cursor = {};
+
+function redrawBoard () {
+    board.getBoard(redrawDisplay);
+}
 
 function playBoardEvents (events) {
     if (events.length === 0) {
@@ -61,14 +66,26 @@ function selectJewel (x = cursor.x, y = cursor.y) {
     }
 }
 
+function moveCursor (x, y) {
+    if (cursor.selected) {
+        x += cursor.x;
+        y += cursor.y;
+
+        if (x >= 0 && x < settings.cols &&
+            y >= 0 && y < settings.rows) {
+            selectJewel(x, y);
+        }
+    } else {
+        x = (cursor.x + x + settings.cols) % settings.cols;
+        y = (cursor.y + y + settings.rows) % settings.rows;
+        setCursor(x, y, false);
+    }
+}
+
 function redrawDisplay (jewels) {
     display.redraw(jewels, function () {
         // do nothing for now
     });
-}
-
-function redrawBoard () {
-    board.getBoard(redrawDisplay);
 }
 
 function initializeDisplay () {
