@@ -242,7 +242,8 @@ var board = (function () {
     // if possible, swaps (x1, y2) and (x2, y2) and
     // calls the callback function with a list of board events
     function swap (x1, y1, x2, y2, callback) {
-        var tmp, events;
+        var tmp;
+        var events = [];
 
         if (canSwap(x1, y1, x2, y2)) {
             // swap the jewels
@@ -252,15 +253,11 @@ var board = (function () {
 
             // check the board and get a list of events
             events = check();
-
-            if (typeof callback === 'function') {
-                callback(events);
-            }
-
-            return;
         }
 
-        callback(false);
+        if (typeof callback === 'function') {
+            callback(events);
+        }
     }
 
     function print () {
