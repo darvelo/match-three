@@ -7,7 +7,7 @@ var firstRun = true;
 var cursor = {};
 
 function redrawDisplay (jewels) {
-    display.redraw(jewels, function () {
+    display.redraw(jewels, () => {
         // do nothing for now
     });
 }
@@ -107,7 +107,7 @@ function moveRight () {
 }
 
 function initializeDisplay () {
-    display.initialize(function () {
+    display.initialize(() => {
         setCursor(0, 0, false);
         redrawBoard();
     });

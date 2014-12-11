@@ -1,14 +1,14 @@
-export var $ = function (id) {
+export function $ (id) {
     if (id[0] === '#') {
         id = id.slice(1);
     }
 
     return document.getElementById(id);
-};
+}
 
-export var $$ = function (selector, ctx) {
-    return (ctx || document).querySelectorAll(selector);
-};
+export function $$ (selector, ctx = document) {
+    return ctx.querySelectorAll(selector);
+}
 
 export function bind (element, event, handler) {
     var elStr = element;

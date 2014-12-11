@@ -62,15 +62,10 @@ export function initialize () {
 
     inputHandlers = {};
 
-    bind(board, 'mousedown', function (e) {
-        handleClick(e, 'CLICK', e);
-    });
+    bind(board, 'mousedown', e => handleClick(e, 'CLICK', e));
+    bind(board, 'touchstart', e => handleClick(e, 'TOUCH', e.targetTouches[0]));
 
-    bind(board, 'touchstart', function (e) {
-        handleClick(e, 'TOUCH', e.targetTouches[0]);
-    });
-
-    bind(document, 'keydown', function (e) {
+    bind(document, 'keydown', e => {
         var keyName = keys[e.keyCode];
 
         if (keyName && settings.controls[keyName]) {

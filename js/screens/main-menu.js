@@ -5,7 +5,7 @@ var firstRun = true;
 var game;
 
 function setup () {
-    bind('#main-menu ul.menu', 'click', function (e) {
+    bind('#main-menu ul.menu', 'click', e => {
         var screenName;
 
         if (e.target.nodeName.toLowerCase() === 'button') {

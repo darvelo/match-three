@@ -17,9 +17,8 @@ function post (command, data, callback) {
     messageCount++;
 }
 
-function messageHandler (event) {
-    var message = event.data;
-
+// function messageHandler (event) {
+function messageHandler ({ data: message }) {
     if (callbacks[message.id]) {
         callbacks[message.id](message.data);
         delete callbacks[message.id];
@@ -27,10 +26,7 @@ function messageHandler (event) {
 }
 
 export function getJewel (x, y, callback) {
-    post('getJewel', {
-        x: x,
-        y: y,
-    }, callback);
+    post('getJewel', {x, y}, callback);
 }
 
 export function getBoard (callback) {
@@ -38,28 +34,21 @@ export function getBoard (callback) {
 }
 
 export function print () {
-    post('print', null, function (jewels) {
-        console.log(jewels);
-    });
+    post('print', null, jewels => console.log(jewels));
 }
 
 export function swap (x1, y1, x2, y2, callback) {
-    post('swap', {
-        x1: x1,
-        y1: y1,
-        x2: x2,
-        y2: y2
-    }, callback);
+    post('swap', {x1, y1, x2, y2}, callback);
 }
 
 export function initialize (callback) {
     messageCount = 0;
     callbacks = [];
     worker = new Worker('/scripts/workers/board.js');
+
     bind(worker, 'message', messageHandler);
-    bind(worker, 'error', function (err) {
-        console.log('worker error:', err);
-    });
+    bind(worker, 'error', err => console.log('worker error:', err));
+
     post('initialize', settings, callback);
 }
 

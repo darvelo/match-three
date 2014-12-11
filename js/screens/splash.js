@@ -11,9 +11,8 @@ var game;
 
 function goToMainMenu () {
     continueButton.style.display = 'block';
-    bind('#splash-screen', 'click', function () {
-        game.showScreen('main-menu');
-    });
+
+    bind('#splash-screen', 'click', () => game.showScreen('main-menu'));
 }
 
 function checkLoadProgress () {

@@ -57,7 +57,7 @@ export function redraw (newJewels, callback) {
     var x, y;
     jewels = newJewels;
 
-    preloader.one(jewelSpritesFilename, function () {
+    preloader.one(jewelSpritesFilename, () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         for (x = 0; x < cols; ++x) {

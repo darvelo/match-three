@@ -13,12 +13,10 @@ function getOrCreateRegister (name) {
     });
 }
 
-export function one (name, callback, context) {
+export function one (name, callback, context = null) {
     var register = getOrCreateRegister(name);
     var objects = register.objects;
     var i = 0;
-
-    context = context || null;
 
     if (register.loaded) {
         setTimeout(callback.bind(context));
