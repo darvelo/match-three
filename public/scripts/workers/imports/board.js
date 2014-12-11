@@ -121,7 +121,7 @@ var board = (function () {
             }
         }
 
-        if (!hasMoves) {
+        if (!hasMoves()) {
             fillBoard();
         }
     }
@@ -224,7 +224,7 @@ var board = (function () {
                 data: moved,
             });
 
-            if (!hasMoves) {
+            if (!hasMoves()) {
                 fillBoard();
 
                 events.push({
