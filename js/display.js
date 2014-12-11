@@ -59,6 +59,27 @@ function drawJewel (type, x, y) {
                  );
 }
 
+export function moveJewels (movedJewels, callback) {
+    for (let mover of movedJewels) {
+        clearJewel(mover.fromX, mover.fromY);
+        drawJewel(mover.type, mover.toX, mover.toY);
+    }
+
+    callback();
+}
+
+export function removeJewels (removedJewels, callback) {
+    for (let removed of removedJewels) {
+        clearJewel(removed.x, removed.y);
+    }
+
+    callback();
+}
+
+export function refill (...args) {
+    redraw(...args);
+}
+
 function clearCursor () {
     if (!cursor) {
         return;
