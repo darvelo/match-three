@@ -16,6 +16,8 @@ var jewelSize;
 var jewelSpritesFilename;
 // holds a copy of the board received from the board module
 var jewels;
+// the cursor position as sent from the game-screen module
+var cursor;
 // flag to only run setup once
 var firstRun = true;
 
@@ -44,6 +46,10 @@ function createBackground () {
     return bg;
 }
 
+function clearJewel (x, y) {
+    ctx.clearRect(x * jewelSize, y * jewelSize, jewelSize, jewelSize);
+}
+
 function drawJewel (type, x, y) {
     var image = loadedImages[jewelSpritesFilename];
 
@@ -51,6 +57,60 @@ function drawJewel (type, x, y) {
                   type * jewelSize, 0, jewelSize, jewelSize,
                   x * jewelSize, y * jewelSize, jewelSize, jewelSize
                  );
+}
+
+function clearCursor () {
+    if (!cursor) {
+        return;
+    }
+
+    var { x, y } = cursor;
+    clearJewel(x, y);
+    drawJewel(jewels[x][y], x, y);
+}
+
+function renderCursor () {
+    if (!cursor) {
+        return;
+    }
+
+    var { x, y } = cursor;
+    var lineWidthPercent = 0.05;
+
+    clearCursor();
+
+    if (!cursor.selected) {
+        return;
+    }
+
+    // draw the jewel lighter
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = 0.8;
+    drawJewel(jewels[x][y], x, y);
+    ctx.restore();
+
+    // draw the cursor
+    ctx.save();
+    ctx.lineWidth = lineWidthPercent * jewelSize;
+    ctx.strokeStyle = 'rgba(250,250,150,0.8)';
+    ctx.strokeRect(
+        (x + lineWidthPercent) * jewelSize, (y + lineWidthPercent) * jewelSize,
+        (1 - lineWidthPercent * 2) * jewelSize, (1 - lineWidthPercent * 2) * jewelSize
+    );
+    ctx.restore();
+}
+
+export function setCursor ({ x, y, selected }) {
+    clearCursor();
+
+    if (arguments.length > 0) {
+        cursor = { x, y, selected };
+    } else {
+        cursor = null;
+    }
+
+    renderCursor();
 }
 
 export function redraw (newJewels, callback) {
@@ -66,6 +126,7 @@ export function redraw (newJewels, callback) {
             }
         }
 
+        renderCursor();
         callback();
     });
 }

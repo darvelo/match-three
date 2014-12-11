@@ -6,9 +6,14 @@ import input from 'input';
 var firstRun = true;
 var cursor = {};
 
+function setCursor (x = 0, y = 0, selected = false) {
+    cursor = { x, y, selected };
+    display.setCursor(cursor);
+}
+
 function redrawDisplay (jewels) {
     display.redraw(jewels, () => {
-        // do nothing for now
+        setCursor(0, 0, false);
     });
 }
 
@@ -16,7 +21,7 @@ function redrawBoard () {
     board.getBoard(redrawDisplay);
 }
 
-function playBoardEvents (events) {
+function playBoardEvents (events = []) {
     if (events.length === 0) {
         redrawBoard();
         return;
@@ -41,10 +46,6 @@ function playBoardEvents (events) {
         next();
         break;
     }
-}
-
-function setCursor (x = 0, y = 0, selected = false) {
-    cursor = { x, y, selected };
 }
 
 function selectJewel (x = cursor.x, y = cursor.y) {
@@ -107,10 +108,7 @@ function moveRight () {
 }
 
 function initializeDisplay () {
-    display.initialize(() => {
-        setCursor(0, 0, false);
-        redrawBoard();
-    });
+    display.initialize(redrawBoard);
 }
 
 function setupInputs () {
