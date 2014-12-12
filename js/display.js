@@ -100,16 +100,14 @@ function renderCursor () {
 
     clearCursor();
 
-    if (!cursor.selected) {
-        return;
-    }
-
     // draw the jewel lighter
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.globalAlpha = 0.8;
-    drawJewel(jewels[x][y], x, y);
-    ctx.restore();
+    if (cursor.selected) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.globalAlpha = 0.8;
+        drawJewel(jewels[x][y], x, y);
+        ctx.restore();
+    }
 
     // draw the cursor
     ctx.save();

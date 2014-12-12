@@ -12,13 +12,19 @@ function setCursor (x = 0, y = 0, selected = false) {
 }
 
 function redrawDisplay (jewels) {
-    display.redraw(jewels, () => {
-        setCursor(0, 0, false);
+    return new Promise(resolve => {
+        display.redraw(jewels, resolve);
+    });
+}
+
+function getBoard () {
+    return new Promise(resolve => {
+        board.getBoard(resolve);
     });
 }
 
 function redrawBoard () {
-    board.getBoard(redrawDisplay);
+    return getBoard().then(redrawDisplay);
 }
 
 function playBoardEvents (events = []) {
@@ -108,7 +114,11 @@ function moveRight () {
 }
 
 function initializeDisplay () {
-    display.initialize(redrawBoard);
+    display.initialize(() => {
+        redrawBoard().then(() => {
+            setCursor(0, 0, false);
+        });
+    });
 }
 
 function setupInputs () {
