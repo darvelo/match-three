@@ -23,19 +23,19 @@ var firstRun = true;
 
 function createBackground () {
     var bg = document.createElement('canvas');
-    var ctx = bg.getContext('2d');
+    var bgCtx = bg.getContext('2d');
     var x, y;
 
     bg.classList.add('board-bg');
     bg.width = boardDimensions.width;
     bg.height = boardDimensions.height;
 
-    ctx.fillStyle = 'rgba(255,235,255,0.15)';
+    bgCtx.fillStyle = 'rgba(255,235,255,0.15)';
 
     for (x = 0; x < cols; ++x) {
         for (y = 0; y < cols; ++y) {
             if ((x+y) % 2) {
-                ctx.fillRect(
+                bgCtx.fillRect(
                     x * jewelSize, y * jewelSize,
                     jewelSize, jewelSize
                 );
@@ -47,7 +47,7 @@ function createBackground () {
 }
 
 function clearJewel (x, y) {
-    ctx.clearRect(x * jewelSize, y * jewelSize, jewelSize, jewelSize);
+    ctx.clearRect(x, y, 1, 1);
 }
 
 function drawJewel (type, x, y) {
@@ -55,7 +55,7 @@ function drawJewel (type, x, y) {
 
     ctx.drawImage(image,
                   type * jewelSize, 0, jewelSize, jewelSize,
-                  x * jewelSize, y * jewelSize, jewelSize, jewelSize
+                  x, y, 1, 1
                  );
 }
 
@@ -111,11 +111,11 @@ function renderCursor () {
 
     // draw the cursor
     ctx.save();
-    ctx.lineWidth = lineWidthPercent * jewelSize;
+    ctx.lineWidth = lineWidthPercent;
     ctx.strokeStyle = 'rgba(250,250,150,0.8)';
     ctx.strokeRect(
-        (x + lineWidthPercent) * jewelSize, (y + lineWidthPercent) * jewelSize,
-        (1 - lineWidthPercent * 2) * jewelSize, (1 - lineWidthPercent * 2) * jewelSize
+        x + lineWidthPercent, y + lineWidthPercent,
+        1 - 2 * lineWidthPercent, 1 - 2 * lineWidthPercent
     );
     ctx.restore();
 }
@@ -134,10 +134,11 @@ export function setCursor ({ x, y, selected }) {
 
 export function redraw (newJewels, callback) {
     var x, y;
+    var { cols, rows } = settings;
     jewels = newJewels;
 
     preloader.one(jewelSpritesFilename, () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, cols, rows);
 
         for (x = 0; x < cols; ++x) {
             for (y = 0; y < rows; ++y) {
@@ -162,6 +163,10 @@ function setup () {
     canvas.classList.add('board');
     canvas.width = boardDimensions.width;
     canvas.height = boardDimensions.height;
+
+    // scale canvas coordinates to the size of one jewel.
+    // makes it easier to manipulate jewels in drawing and animations.
+    ctx.scale(jewelSize, jewelSize);
 
     boardElement.appendChild(createBackground());
     boardElement.appendChild(canvas);
