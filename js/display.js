@@ -12,6 +12,8 @@ export var ctx = canvas.getContext('2d');
 
 // previous animation frame time
 var previousCycle;
+// shim for browsers without Navigation API
+var now = (window.performance && window.performance.now) ? window.performance.now.bind(window.performance) : Date.now;
 
 var { cols, rows } = settings;
 // size changes based on screen size
@@ -180,8 +182,7 @@ function setup () {
     boardElement.appendChild(createBackground());
     boardElement.appendChild(canvas);
 
-    var performance = window.performance;
-    previousCycle = performance.now ? performance.now() : Date.now();
+    previousCycle = now();
     rAF(cycle);
 }
 
