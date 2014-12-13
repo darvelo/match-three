@@ -12,6 +12,8 @@ export var rAF = (function() {
            };
 })();
 
+export default rAF;
+
 export var cancelRAF = (function() {
     return window.cancelRequestAnimationFrame ||
            window.webkitCancelRequestAnimationFrame ||

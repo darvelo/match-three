@@ -2,12 +2,17 @@ import { $$ } from 'util/dom';
 import settings from 'settings';
 import preloader from 'util/loader';
 import loadedImages from 'images';
+import rAF from 'util/rAF';
 
 var boardElement;
 var boardDimensions;
 
 var canvas = document.createElement('canvas');
 export var ctx = canvas.getContext('2d');
+
+// previous animation frame time
+var previousCycle;
+
 var { cols, rows } = settings;
 // size changes based on screen size
 var jewelSize;
@@ -19,6 +24,12 @@ var jewels;
 var cursor;
 // flag to only run setup once
 var firstRun = true;
+
+function cycle (time) {
+    renderCursor(time);
+    previousCycle = time;
+    rAF(cycle);
+}
 
 function createBackground () {
     var bg = document.createElement('canvas');
@@ -89,13 +100,15 @@ function clearCursor () {
     drawJewel(jewels[x][y], x, y);
 }
 
-function renderCursor () {
+function renderCursor (time) {
     if (!cursor) {
         return;
     }
 
     var { x, y } = cursor;
     var lineWidthPercent = 0.05;
+    var t1 = (Math.sin(time / 200) + 1) / 2;
+    var t2 = (Math.sin(time / 400) + 1) / 2;
 
     clearCursor();
 
@@ -103,7 +116,7 @@ function renderCursor () {
     if (cursor.selected) {
         ctx.save();
         ctx.globalCompositeOperation = 'lighter';
-        ctx.globalAlpha = 0.8;
+        ctx.globalAlpha = 0.8 * t1;
         drawJewel(jewels[x][y], x, y);
         ctx.restore();
     }
@@ -111,7 +124,7 @@ function renderCursor () {
     // draw the cursor
     ctx.save();
     ctx.lineWidth = lineWidthPercent;
-    ctx.strokeStyle = 'rgba(250,250,150,0.8)';
+    ctx.strokeStyle = 'rgba(250,250,150,' + (0.5 + 0.5 * t2)  +')';
     ctx.strokeRect(
         x + lineWidthPercent, y + lineWidthPercent,
         1 - 2 * lineWidthPercent, 1 - 2 * lineWidthPercent
@@ -127,8 +140,6 @@ export function setCursor ({ x, y, selected }) {
     } else {
         cursor = null;
     }
-
-    renderCursor();
 }
 
 export function redraw (newJewels, callback) {
@@ -168,6 +179,10 @@ function setup () {
 
     boardElement.appendChild(createBackground());
     boardElement.appendChild(canvas);
+
+    var performance = window.performance;
+    previousCycle = performance.now ? performance.now() : Date.now();
+    rAF(cycle);
 }
 
 export function initialize (callback) {
