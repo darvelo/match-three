@@ -8,8 +8,7 @@ var boardDimensions;
 
 var canvas = document.createElement('canvas');
 export var ctx = canvas.getContext('2d');
-var rows = settings.rows;
-var cols = settings.cols;
+var { cols, rows } = settings;
 // size changes based on screen size
 var jewelSize;
 // holds filename to get access to jewels sprite image from the loadedImages object
@@ -33,7 +32,7 @@ function createBackground () {
     bgCtx.fillStyle = 'rgba(255,235,255,0.15)';
 
     for (x = 0; x < cols; ++x) {
-        for (y = 0; y < cols; ++y) {
+        for (y = 0; y < rows; ++y) {
             if ((x+y) % 2) {
                 bgCtx.fillRect(
                     x * jewelSize, y * jewelSize,
@@ -134,7 +133,6 @@ export function setCursor ({ x, y, selected }) {
 
 export function redraw (newJewels, callback) {
     var x, y;
-    var { cols, rows } = settings;
     jewels = newJewels;
 
     preloader.one(jewelSpritesFilename, () => {
