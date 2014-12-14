@@ -13,6 +13,7 @@ export var ctx = canvas.getContext('2d');
 
 // previous animation frame time
 var previousCycle;
+var animations = [];
 
 var { cols, rows } = settings;
 // size changes based on screen size
@@ -26,8 +27,54 @@ var cursor;
 // flag to only run setup once
 var firstRun = true;
 
+function addAnimation (runTime, funcs) {
+    var anim = {
+        runTime,
+        funcs,
+        startTime: now(),
+        pos: 0,
+    };
+
+    animations.push(anim);
+}
+
+function renderAnimations (time, lastTime) {
+    // copy list
+    var anims = animations.slice(0);
+
+    // call before() function
+    for (let anim of anims) {
+        if (anim.funcs.before) {
+            anim.funcs.before(anim.pos);
+        }
+
+        anim.lastPos = anim.pos;
+        let animTime = (lastTime - anim.startTime);
+        anim.pos = animTime / anim.runTime;
+        // clamp animation position between 0 and 1
+        anim.pos = Math.max(0, Math.min(1, anim.pos));
+    }
+
+    // rest animation list
+    animations = [];
+
+    // render after all before() calls to prevent any interference with rendering
+    for (let anim of anims) {
+        anim.funcs.render(anim.pos, anim.pos - anim.lastPos);
+
+        if (anim.pos === 1) {
+            if (anim.funcs.done) {
+                anim.funcs.done();
+            }
+        } else {
+            animations.push(anim);
+        }
+    }
+}
+
 function cycle (time) {
     renderCursor(time);
+    renderAnimations(time, previousCycle);
     previousCycle = time;
     rAF(cycle);
 }
