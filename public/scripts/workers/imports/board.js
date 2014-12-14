@@ -242,8 +242,46 @@ var board = (function () {
     // if possible, swaps (x1, y2) and (x2, y2) and
     // calls the callback function with a list of board events
     function swap (x1, y1, x2, y2, callback) {
-        var tmp;
         var events = [];
+        var tmp;
+
+        var initialSwapEvent = {
+            type: 'move',
+            data: [{
+                type: getJewel(x1, y1),
+                fromX: x1,
+                fromY: y1,
+                toX: x2,
+                toY: y2,
+            }, {
+                type: getJewel(x2, y2),
+                fromX: x2,
+                fromY: y2,
+                toX: x1,
+                toY: y1,
+            }],
+        };
+
+        var badSwapEvent = {
+            type: 'move',
+            data: [{
+                type: getJewel(x2, y2),
+                fromX: x1,
+                fromY: y1,
+                toX: x2,
+                toY: y2,
+            }, {
+                type: getJewel(x1, y1),
+                fromX: x2,
+                fromY: y2,
+                toX: x1,
+                toY: y1,
+            }],
+        };
+
+        if (isAdjacent(x1, y1, x2, y2)) {
+            events.push(initialSwapEvent);
+        }
 
         if (canSwap(x1, y1, x2, y2)) {
             // swap the jewels
@@ -252,7 +290,9 @@ var board = (function () {
             jewels[x2][y2] = tmp;
 
             // check the board and get a list of events
-            events = check();
+            events = events.concat(check());
+        } else {
+            events.push(badSwapEvent, { type: 'badswap' });
         }
 
         if (typeof callback === 'function') {
