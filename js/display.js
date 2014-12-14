@@ -118,12 +118,42 @@ function drawJewel (type, x, y) {
 }
 
 export function moveJewels (movedJewels, callback) {
-    for (let mover of movedJewels) {
-        clearJewel(mover.fromX, mover.fromY);
-        drawJewel(mover.type, mover.toX, mover.toY);
-    }
+    var n = movedJewels.length;
+    var oldCursor = cursor;
 
-    callback();
+    cursor = null;
+
+    movedJewels.forEach(e => {
+        var x = e.fromX;
+        var y = e.fromY;
+        var dx = e.toX - e.fromX;
+        var dy = e.toY - e.fromY;
+        var dist = Math.abs(dx) + Math.abs(dy);
+
+        var anim = {
+            before(pos) {
+                pos = Math.sin(pos * Math.PI / 2);
+                clearJewel(x + dx * pos, y + dy * pos);
+            },
+
+            render(pos) {
+                pos = Math.sin(pos * Math.PI / 2);
+                drawJewel(
+                    e.type,
+                    x + dx * pos, y + dy * pos
+                );
+            },
+
+            done() {
+                if (--n === 0) {
+                    cursor = oldCursor;
+                    callback();
+                }
+            },
+        };
+
+        addAnimation(200 * dist, anim);
+    });
 }
 
 export function removeJewels (removedJewels, callback) {
