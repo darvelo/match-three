@@ -1,12 +1,14 @@
+import now from 'util/now';
+
 export var rAF = (function() {
-    var startTime = Date.now();
+    var startTime = now();
     return window.requestAnimationFrame ||
            window.webkitRequestAnimationFrame ||
            window.mozRequestAnimationFrame ||
            function(callback) {
                return window.setTimeout(
                    function() {
-                       callback(Date.now() - startTime);
+                       callback(now() - startTime);
                    }, 1000 / 60
                );
            };
