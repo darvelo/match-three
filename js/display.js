@@ -3,6 +3,7 @@ import settings from 'settings';
 import preloader from 'util/loader';
 import loadedImages from 'images';
 import rAF from 'util/rAF';
+import now from 'util/now';
 
 var boardElement;
 var boardDimensions;
@@ -12,8 +13,6 @@ export var ctx = canvas.getContext('2d');
 
 // previous animation frame time
 var previousCycle;
-// shim for browsers without Navigation API
-var now = (window.performance && window.performance.now) ? window.performance.now.bind(window.performance) : Date.now;
 
 var { cols, rows } = settings;
 // size changes based on screen size
