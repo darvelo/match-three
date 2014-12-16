@@ -108,13 +108,30 @@ function clearJewel (x, y) {
     ctx.clearRect(x, y, 1, 1);
 }
 
-function drawJewel (type, x, y) {
+function drawJewel (type, x, y, scale, rotation) {
     var image = loadedImages[jewelSpritesFilename];
 
+    ctx.save();
+
+    if (typeof scale !== 'undefined' && scale > 0) {
+        ctx.beginPath();
+        ctx.rect(x, y, 1, 1);
+        ctx.clip();
+        ctx.translate(x + 0.5, y + 0.5);
+        ctx.scale(scale, scale);
+        if (rotation) {
+            ctx.rotate(rotation);
+        }
+
+        ctx.translate(-x - 0.5, -y - 0.5);
+    }
+
     ctx.drawImage(image,
-                  type * jewelSize, 0, jewelSize, jewelSize,
-                  x, y, 1, 1
-                 );
+        type * jewelSize, 0, jewelSize, jewelSize,
+        x, y, 1, 1
+    );
+
+    ctx.restore();
 }
 
 export function moveJewels (movedJewels, callback) {
@@ -157,11 +174,33 @@ export function moveJewels (movedJewels, callback) {
 }
 
 export function removeJewels (removedJewels, callback) {
-    for (let removed of removedJewels) {
-        clearJewel(removed.x, removed.y);
-    }
+    var n = removedJewels.length;
 
-    callback();
+    removedJewels.forEach(e => {
+        var anim = {
+            before() {
+                clearJewel(e.x, e.y);
+            },
+
+            render(pos) {
+                ctx.save();
+                ctx.globalAlpha = 1 - pos;
+                drawJewel(
+                    e.type, e.x, e.y,
+                    1 - pos, pos * Math.PI * 2
+                );
+                ctx.restore();
+            },
+
+            done() {
+                if (--n === 0) {
+                    callback();
+                }
+            }
+        };
+
+        addAnimation(200, anim);
+    });
 }
 
 export function refill (...args) {
