@@ -262,7 +262,7 @@ var board = (function () {
             }],
         };
 
-        var badSwapEvent = {
+        var swapBackEvent = {
             type: 'move',
             data: [{
                 type: getJewel(x2, y2),
@@ -292,7 +292,7 @@ var board = (function () {
             // check the board and get a list of events
             events = events.concat(check());
         } else {
-            events.push(badSwapEvent, { type: 'badswap' });
+            events.push(swapBackEvent, { type: 'badswap' });
         }
 
         if (typeof callback === 'function') {
