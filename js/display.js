@@ -4,6 +4,7 @@ import preloader from 'util/loader';
 import loadedImages from 'images';
 import rAF from 'util/rAF';
 import now from 'util/now';
+import cssTransform from 'util/css-transform';
 
 var boardElement;
 var boardDimensions;
@@ -203,8 +204,31 @@ export function removeJewels (removedJewels, callback) {
     });
 }
 
-export function refill (...args) {
-    redraw(...args);
+export function refill (newJewels, callback) {
+    var lastJewel = 0;
+
+    var anim = {
+        render(pos) {
+            var thisJewel = Math.floor(pos * cols * rows);
+
+            for (let i = lastJewel; i < thisJewel; ++i) {
+                let x = i % cols;
+                let y = Math.floor(i / cols);
+                clearJewel(x, y);
+                drawJewel(newJewels[x][y], x, y);
+            }
+
+            lastJewel = thisJewel;
+            cssTransform(canvas, 'rotateX(' + (360 * pos) + 'deg)');
+        },
+
+        done() {
+            cssTransform(canvas, '');
+            callback();
+        }
+    };
+
+    addAnimation(1000, anim);
 }
 
 function clearCursor () {

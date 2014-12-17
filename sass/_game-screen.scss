@@ -3,6 +3,8 @@
     width: 8em;
     height: 8em;
     margin: 0 auto;
+    // add depth to rotation when refilling the board
+    perspective: 16em;
 
     .board-bg,
     .board {
