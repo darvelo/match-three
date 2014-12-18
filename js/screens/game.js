@@ -5,6 +5,7 @@ import input from 'input';
 
 var firstRun = true;
 var cursor = {};
+var gameState;
 
 function setCursor (x = 0, y = 0, selected = false) {
     cursor = { x, y, selected };
@@ -113,14 +114,6 @@ function moveRight () {
     moveCursor(1, 0);
 }
 
-function initializeDisplay () {
-    display.initialize(() => {
-        redrawBoard().then(() => {
-            setCursor(0, 0, false);
-        });
-    });
-}
-
 function setupInputs () {
     input.initialize();
     input.bindAction('selectJewel', selectJewel);
@@ -130,11 +123,31 @@ function setupInputs () {
     input.bindAction('moveRight', moveRight);
 }
 
+function initializeDisplay () {
+    display.initialize(() => {
+        redrawBoard().then(() => {
+            setCursor(0, 0, false);
+        });
+    });
+}
+
+function startGame () {
+    gameState = {
+        level: 0,
+        score: 0,
+        timer: 0,     // setTimeout reference
+        startTime: 0, // time at the start of the level
+        endTime: 0,   // time to game over
+    };
+
+    board.initialize(initializeDisplay);
+}
+
 export function run () {
     if (firstRun) {
         setupInputs();
         firstRun = false;
     }
 
-    board.initialize(initializeDisplay);
+    startGame();
 }
