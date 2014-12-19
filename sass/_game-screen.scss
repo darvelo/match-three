@@ -16,3 +16,25 @@
     .board-bg { z-index: 0; }
     .board { z-index: 10; }
 }
+
+#game-screen .game-info {
+    width: 100%;
+    float: left;
+
+    label {
+        display: inline-block;
+        float: left;
+        padding: 0.25em;
+        height: 1.5em;
+        font-size: 0.6em;
+    }
+
+    .score { float: right; }
+}
+
+#game-screen .time {
+    height: 0.25em;
+    border-radius: 0.5em;
+
+    .indicator { width: 100%; }
+}

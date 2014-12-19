@@ -32,6 +32,29 @@
         margin: 0.5em;
         font-size: 0.5em;
     }
+
+    #game-screen .game-board { float: left; }
+
+    #game-screen .game-info {
+        width: auto;
+        height: 2em;
+        white-space: nowrap;
+
+        label { font-size: 0.5em; }
+
+        .score {
+            float:left;
+            clear: both;
+        }
+    }
+
+    #game-screen .time {
+        float: left;
+        margin: 0;
+        width: 6.5em;
+        font-size: 0.5em;
+        transform: rotate(-90deg) trnaslate (-3em, -1.75em);
+    }
 }
 
 /* small screens landscape */
