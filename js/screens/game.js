@@ -126,7 +126,6 @@ function setupInputs () {
 function initializeDisplay () {
     display.initialize(() => {
         redrawBoard().then(() => {
-            setCursor(0, 0, false);
         });
     });
 }
@@ -138,6 +137,12 @@ function startGame () {
         timer: 0,     // setTimeout reference
         startTime: 0, // time at the start of the level
         endTime: 0,   // time to game over
+    };
+
+    cursor = {
+        x: 0,
+        y: 0,
+        selected: false,
     };
 
     board.initialize(initializeDisplay);
