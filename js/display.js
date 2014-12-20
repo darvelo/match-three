@@ -296,7 +296,6 @@ export function redraw (newJewels, callback) {
             }
         }
 
-        renderCursor();
         callback();
     });
 }
