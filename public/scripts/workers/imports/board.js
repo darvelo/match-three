@@ -180,7 +180,7 @@ var board = (function () {
                     // add points to score
                     // double the multiplier for every extra jewel in the chain
                     score += baseScore * Math.pow(2, (chains[x][y] - 3));
-                } else if (gaps[x]) {
+                } else if (gaps[x] > 0) {
                     moved.push({
                         fromX: x,
                         fromY: y,
@@ -196,7 +196,7 @@ var board = (function () {
 
         // create new jewels to drop down from out of view
         for (x = 0; x < cols; ++x) {
-            for (y = gaps[x] - 1; y >= 0; --y) {
+            for (y = 0; y < gaps[x]; ++y) {
                 jewels[x][y] = randomJewel();
 
                 moved.push({
