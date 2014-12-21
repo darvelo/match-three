@@ -106,7 +106,7 @@ function createBackground () {
 }
 
 function clearJewel (x, y) {
-    ctx.clearRect(x, y, 1, 1);
+    ctx.clearRect(x * jewelSize, y * jewelSize, jewelSize, jewelSize);
 }
 
 function drawJewel (type, x, y, scale, rotation) {
@@ -116,20 +116,19 @@ function drawJewel (type, x, y, scale, rotation) {
 
     if (typeof scale !== 'undefined' && scale > 0) {
         ctx.beginPath();
-        ctx.rect(x, y, 1, 1);
-        ctx.clip();
-        ctx.translate(x + 0.5, y + 0.5);
+        ctx.translate((x + 0.5) * jewelSize, (y + 0.5) * jewelSize);
         ctx.scale(scale, scale);
         if (rotation) {
             ctx.rotate(rotation);
         }
 
-        ctx.translate(-x - 0.5, -y - 0.5);
+        ctx.translate(-(x + 0.5) * jewelSize, -(y + 0.5) * jewelSize);
     }
 
     ctx.drawImage(image,
         type * jewelSize, 0, jewelSize, jewelSize,
-        x, y, 1, 1
+        x * jewelSize, y * jewelSize,
+        jewelSize, jewelSize
     );
 
     ctx.restore();
@@ -264,11 +263,11 @@ function renderCursor (time) {
 
     // draw the cursor
     ctx.save();
-    ctx.lineWidth = lineWidthPercent;
+    ctx.lineWidth = lineWidthPercent * jewelSize;
     ctx.strokeStyle = 'rgba(250,250,150,' + (0.5 + 0.5 * t2)  +')';
     ctx.strokeRect(
-        x + lineWidthPercent, y + lineWidthPercent,
-        1 - 2 * lineWidthPercent, 1 - 2 * lineWidthPercent
+        (x + lineWidthPercent) * jewelSize, (y + lineWidthPercent) * jewelSize,
+        (1 - lineWidthPercent * 2) * jewelSize, (1 - lineWidthPercent * 2) * jewelSize
     );
     ctx.restore();
 }
@@ -288,7 +287,7 @@ export function redraw (newJewels, callback) {
     jewels = newJewels;
 
     preloader.one(jewelSpritesFilename, () => {
-        ctx.clearRect(0, 0, cols, rows);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         for (x = 0; x < cols; ++x) {
             for (y = 0; y < rows; ++y) {
@@ -312,10 +311,6 @@ function setup () {
     canvas.classList.add('board');
     canvas.width = boardDimensions.width;
     canvas.height = boardDimensions.height;
-
-    // scale canvas coordinates to the size of one jewel.
-    // makes it easier to manipulate jewels in drawing and animations.
-    ctx.scale(jewelSize, jewelSize);
 
     boardElement.appendChild(createBackground());
     boardElement.appendChild(canvas);
