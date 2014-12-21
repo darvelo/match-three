@@ -3,7 +3,6 @@ import settings from 'settings';
 import preloader from 'util/loader';
 import loadedImages from 'images';
 import rAF from 'util/rAF';
-import now from 'util/now';
 import cssTransform from 'util/css-transform';
 
 var boardElement;
@@ -32,7 +31,7 @@ function addAnimation (runTime, funcs) {
     var anim = {
         runTime,
         funcs,
-        startTime: now(),
+        startTime: previousCycle,
         pos: 0,
     };
 
@@ -74,6 +73,10 @@ function renderAnimations (time, lastTime) {
 }
 
 function cycle (time) {
+    if (!previousCycle) {
+        previousCycle = time;
+    }
+
     renderCursor(time);
     renderAnimations(time, previousCycle);
     previousCycle = time;
@@ -315,7 +318,6 @@ function setup () {
     boardElement.appendChild(createBackground());
     boardElement.appendChild(canvas);
 
-    previousCycle = now();
     rAF(cycle);
 }
 
