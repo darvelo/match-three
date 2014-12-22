@@ -7,7 +7,8 @@ export var rAF = (function() {
 export default rAF;
 
 export var cancelRAF = (function() {
-    return window.cancelRequestAnimationFrame ||
+    return window.cancelAnimationFrame ||
+           window.cancelRequestAnimationFrame ||
            window.webkitCancelRequestAnimationFrame ||
            window.mozCancelRequestAnimationFrame;
 })();
