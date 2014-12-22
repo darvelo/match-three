@@ -55,7 +55,7 @@ function renderAnimations (time, lastTime) {
         anim.pos = Math.max(0, Math.min(1, anim.pos));
     }
 
-    // rest animation list
+    // reset animation list
     animations = [];
 
     // render after all before() calls to prevent any interference with rendering
