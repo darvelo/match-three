@@ -2,6 +2,7 @@ import board from 'board';
 import display from 'display';
 import settings from 'settings';
 import input from 'input';
+import { $$ } from 'util/dom';
 
 var firstRun = true;
 var cursor = {};
@@ -130,6 +131,15 @@ function initializeDisplay () {
     });
 }
 
+function updateGameInfo () {
+    var gameScreen = $$('.game-screen')[0];
+    var scoreEl = $$('.score span', gameScreen)[0];
+    var levelEl = $$('.level span', gameScreen)[0];
+
+    scoreEl.innerHTML = gameState.score;
+    levelEl.innerHTML = gameState.level;
+}
+
 function startGame () {
     gameState = {
         level: 0,
@@ -144,6 +154,8 @@ function startGame () {
         y: 0,
         selected: false,
     };
+
+    updateGameInfo();
 
     board.initialize(initializeDisplay);
 }
