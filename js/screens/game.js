@@ -140,6 +140,29 @@ function updateGameInfo () {
     levelEl.innerHTML = gameState.level;
 }
 
+function setLevelTimer (reset) {
+    if (gameState.timer) {
+        clearTimeout(gameState.timer);
+        gameState.timer = 0;
+    }
+
+    if (reset) {
+        gameState.startTime = Date.now();
+        gameState.endTime = settings.baseLevelTimer * Math.pow(-0.05, gameState.level);
+    }
+
+    var delta = gameState.startTime + gameState.endTime - Date.now();
+    var percent = (delta / gameState.endTime) * 100;
+    var progress = $$('#game-screen .time .indicator')[0];
+
+    if (delta < 0) {
+        gameOver();
+    } else {
+        progress.style.width = percent + '%';
+        gameState.timer = setTimeout(setLevelTimer, 30);
+    }
+}
+
 function startGame () {
     gameState = {
         level: 0,
@@ -156,6 +179,7 @@ function startGame () {
     };
 
     updateGameInfo();
+    setLevelTimer(true);
 
     board.initialize(initializeDisplay);
 }

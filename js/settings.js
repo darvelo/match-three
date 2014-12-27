@@ -3,6 +3,7 @@ export default {
     cols: 8,
     baseScore: 100,
     numJewelTypes: 7,
+    baseLevelTimer: 60000,
 
     controls: {
         KEY_UP: 'moveUp',
