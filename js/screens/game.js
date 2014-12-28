@@ -29,6 +29,11 @@ function redrawBoard () {
     return getBoard().then(redrawDisplay);
 }
 
+function addScore (points) {
+    gameState.score += points;
+    updateGameInfo();
+}
+
 function playBoardEvents (events = []) {
     if (events.length === 0) {
         redrawBoard();
@@ -49,6 +54,10 @@ function playBoardEvents (events = []) {
         break;
     case 'refill':
         display.refill(boardEvent.data, next);
+        break;
+    case 'score':
+        addScore(boardEvent.data);
+        next();
         break;
     default:
         next();
