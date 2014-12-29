@@ -29,8 +29,28 @@ function redrawBoard () {
     return getBoard().then(redrawDisplay);
 }
 
+function advanceLevel () {
+    gameState.level++;
+    updateGameInfo();
+    gameState.startTime = Date.now();
+    gameState.endTime = settings.baseLevelTimer *
+        Math.pow(gameState.level, -0.05 * gameState.level);
+
+    setLevelTimer(true);
+}
+
 function addScore (points) {
+    var nextLevelAt = Math.pow(
+        settings.baseLevelScore,
+        Math.pow(settings.baseLevelExp, gameState.level - 1)
+    );
+
     gameState.score += points;
+
+    if (gameState.score >= nextLevelAt) {
+        advanceLevel();
+    }
+
     updateGameInfo();
 }
 
@@ -136,6 +156,7 @@ function setupInputs () {
 function initializeDisplay () {
     display.initialize(() => {
         redrawBoard().then(() => {
+            advanceLevel();
         });
     });
 }
@@ -157,7 +178,10 @@ function setLevelTimer (reset) {
 
     if (reset) {
         gameState.startTime = Date.now();
-        gameState.endTime = settings.baseLevelTimer * Math.pow(-0.05, gameState.level);
+        gameState.endTime =
+            settings.baseLevelTimer *
+            Math.pow(gameState.level,
+                    -0.05 * gameState.level);
     }
 
     var delta = gameState.startTime + gameState.endTime - Date.now();
@@ -188,7 +212,6 @@ function startGame () {
     };
 
     updateGameInfo();
-    setLevelTimer(true);
 
     board.initialize(initializeDisplay);
 }
