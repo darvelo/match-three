@@ -302,6 +302,44 @@ export function redraw (newJewels, callback) {
     });
 }
 
+export function levelUp (callback) {
+    var anim = {
+        before(pos) {
+            var j = Math.floor(pos * rows * 2);
+            var x, y;
+
+            for (y = 0, x = j; y < rows; ++y, --x) {
+                // boundary check
+                if (x >= 0 && x < cols) {
+                    clearJewel(x, y);
+                    drawJewel(jewels[x][y], x, y);
+                }
+            }
+        },
+
+        render(pos) {
+            var j = Math.floor(pos * rows * 2);
+            var x, y;
+
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+
+            for (y = 0, x = j; y < rows; ++y, --x) {
+                // boundary check
+                if (x >= 0 && x < cols) {
+                    drawJewel(jewels[x][y], x, y);
+                }
+            }
+
+            ctx.restore();
+        },
+
+        done: callback,
+    };
+
+    addAnimation(1000, anim);
+}
+
 function setup () {
     boardElement = $$('#game-screen .game-board')[0];
     boardDimensions = boardElement.getBoundingClientRect();

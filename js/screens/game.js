@@ -37,6 +37,7 @@ function advanceLevel () {
         Math.pow(gameState.level, -0.05 * gameState.level);
 
     setLevelTimer(true);
+    display.levelUp();
 }
 
 function addScore (points) {
