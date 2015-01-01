@@ -17,6 +17,24 @@
     .board { z-index: 10; }
 }
 
+#game-screen .announcement {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 20;
+    margin-top: -0.5em;
+    width: 100%;
+    opacity: 0;
+    color: rgb(150,150,75);
+    text-align: center;
+    white-space: nowrap;
+    font-family: Slackey, sans-serif;
+    cursor: default;
+    text-shadow : 0.03em 0.03em 0.03em rgb(255,255,0),
+                 -0.03em -0.03em 0.03em rgb(255,255,0),
+                  0.1em 0.15em 0.15em rgb(0,0,0);
+}
+
 #game-screen .game-info {
     width: 100%;
     float: left;

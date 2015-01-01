@@ -4,6 +4,8 @@ export default {
     baseScore: 100,
     numJewelTypes: 7,
     baseLevelTimer: 60000,
+    baseLevelScore: 1500,
+    baseLevelExp: 1.05,
 
     controls: {
         KEY_UP: 'moveUp',

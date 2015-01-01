@@ -7,6 +7,7 @@ import { $$ } from 'util/dom';
 var firstRun = true;
 var cursor = {};
 var gameState;
+var announcement = $$('#game-screen .announcement')[0];
 
 function setCursor (x = 0, y = 0, selected = false) {
     cursor = { x, y, selected };
@@ -29,8 +30,15 @@ function redrawBoard () {
     return getBoard().then(redrawDisplay);
 }
 
+function announce (msg) {
+    announcement.innerHTML = msg;
+    announcement.classList.remove('zoomfade');
+    setTimeout(() => announcement.classList.add('zoomfade'));
+}
+
 function advanceLevel () {
     gameState.level++;
+    announce('Level ' + gameState.level + '!');
     updateGameInfo();
     gameState.startTime = Date.now();
     gameState.endTime = settings.baseLevelTimer *
