@@ -4,6 +4,10 @@ import settings from 'settings';
 var inputHandlers;
 
 var keys = {
+    72: 'KEY_LEFT',
+    75: 'KEY_UP',
+    76: 'KEY_RIGHT',
+    74: 'KEY_DOWN',
     37: 'KEY_LEFT',
     38: 'KEY_UP',
     39: 'KEY_RIGHT',
