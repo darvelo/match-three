@@ -180,6 +180,12 @@ function updateGameInfo () {
     levelEl.innerHTML = gameState.level;
 }
 
+function gameOver () {
+    display.gameOver(function () {
+        announce('Game Over');
+    });
+}
+
 function setLevelTimer (reset) {
     if (gameState.timer) {
         clearTimeout(gameState.timer);

@@ -233,6 +233,86 @@ export function refill (newJewels, callback) {
     addAnimation(1000, anim);
 }
 
+function explodePieces (pieces, pos, delta) {
+    var piece;
+
+    for (piece of pieces) {
+        // apply gravity
+        piece.vel.y += 50 * delta;
+        piece.pos.y += piece.vel.y * delta;
+        piece.pos.x += piece.vel.x * delta;
+
+        if (piece.pos.x < 0 || piece.pos.x > cols) {
+            piece.pos.x = Math.max(0, piece.pos.x);
+            piece.pos.x = Math.min(cols, piece.pos.x);
+            piece.vel.x *= -1;
+        }
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.translate(piece.pos.x * jewelSize, piece.pos.y * jewelSize);
+        ctx.rotate(piece.rot * pos * Math.PI * 4);
+        ctx.translate(-piece.pos.x * jewelSize, -piece.pos.y * jewelSize);
+        drawJewel(piece.type,
+            piece.pos.x - 0.5,
+            piece.pos.y - 0.5
+        );
+        ctx.restore();
+    }
+}
+
+function explode (callback) {
+    var pieces = [];
+    var x, y;
+
+    for (x = 0; x < cols; ++x) {
+        for (y = 0; y < rows; ++y) {
+            pieces.push({
+                type: jewels[x][y],
+
+                pos: {
+                    x: x + 0.5,
+                    y: y + 0.5,
+                },
+
+                vel: {
+                    x: (Math.random() - 0.5) * 20,
+                    y: -Math.random() * 10,
+                },
+
+                rot: (Math.random() - 0.5) * 3,
+            });
+        }
+    }
+
+    addAnimation(2000, {
+        before()  {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+        },
+        render(pos, delta) {
+            explodePieces(pieces, pos, delta);
+        },
+        done: callback,
+    });
+}
+
+export function gameOver (callback) {
+    var anim = {
+        render(pos) {
+            canvas.style.left = 0.2 * pos * (Math.random() - 0.5) + 'em';
+            canvas.style.top  = 0.2 * pos * (Math.random() - 0.5) + 'em';
+        },
+
+        done() {
+            canvas.style.left = '0';
+            canvas.style.top  = '0';
+            explode(callback);
+        },
+    };
+
+    addAnimation(1000, anim);
+}
+
 function clearCursor () {
     if (!cursor) {
         return;
