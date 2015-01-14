@@ -2,6 +2,7 @@ import board from 'board';
 import display from 'display';
 import settings from 'settings';
 import input from 'input';
+import audio from 'audio';
 import { $$ } from 'util/dom';
 
 var firstRun = true;
@@ -37,6 +38,8 @@ function announce (msg) {
 }
 
 function advanceLevel () {
+    audio.play('levelup');
+
     gameState.level++;
     announce('Level ' + gameState.level + '!');
     updateGameInfo();
@@ -79,7 +82,12 @@ function playBoardEvents (events = []) {
         display.moveJewels(boardEvent.data, next);
         break;
     case 'remove':
+        audio.play('match');
         display.removeJewels(boardEvent.data, next);
+        break;
+    case 'badswap':
+        audio.play('badswap');
+        next();
         break;
     case 'refill':
         announce('No moves!');
@@ -166,6 +174,7 @@ function setupInputs () {
 function initializeDisplay () {
     display.initialize(() => {
         redrawBoard().then(() => {
+            audio.initialize();
             advanceLevel();
         });
     });
@@ -181,6 +190,8 @@ function updateGameInfo () {
 }
 
 function gameOver () {
+    audio.play('gameover');
+
     display.gameOver(function () {
         announce('Game Over');
     });
